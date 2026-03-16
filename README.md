@@ -325,7 +325,7 @@ Now the fun begins! You'll use Claude Code to build a complete data pipeline usi
 First, let's find out your catalog name. In Claude Code, type:
 
 ```
-> List the catalogs available in my Databricks workspace using the Databricks CLI with the WORKSHOP profile
+List the catalogs available in my Databricks workspace using the Databricks CLI with the WORKSHOP profile
 ```
 
 Note down your catalog name from the output.
@@ -333,8 +333,8 @@ Note down your catalog name from the output.
 Now, create a schema for the workshop:
 
 ```
-> Using the Databricks CLI with the WORKSHOP profile, create a schema called
-> <your_username>_demo under the <your_catalog> catalog in my Databricks workspace
+Using the Databricks CLI with the WORKSHOP profile, create a schema called
+<your_username>_demo under the <your_catalog> catalog in my Databricks workspace
 ```
 
 **Validate in the workspace:**
@@ -350,8 +350,8 @@ Now, create a schema for the workshop:
 Next, create a Unity Catalog Volume to store the raw CSV files:
 
 ```
-> Using the Databricks CLI with the WORKSHOP profile, create a volume called
-> "landing" of type MANAGED under the schema <your_catalog>.<your_username>_demo
+Using the Databricks CLI with the WORKSHOP profile, create a volume called
+"landing" of type MANAGED under the schema <your_catalog>.<your_username>_demo
 ```
 
 **Validate in the workspace:**
@@ -367,22 +367,22 @@ Choose your industry (FSI or Pharma) and upload the sample data:
 
 **For FSI:**
 ```
-> Upload all CSV files from the data/fsi/ directory to my Databricks volume at
-> /Volumes/<your_catalog>/<your_username>_demo/landing/ using the Databricks CLI
-> with the WORKSHOP profile.
-> Each CSV file should be placed under its own subdirectory matching the source
-> directory name. For example, banking_customers.csv should go to
-> /Volumes/<your_catalog>/<your_username>_demo/landing/banking_customers/banking_customers.csv
+Upload all CSV files from the data/fsi/ directory to my Databricks volume at
+/Volumes/<your_catalog>/<your_username>_demo/landing/ using the Databricks CLI
+with the WORKSHOP profile.
+Each CSV file should be placed under its own subdirectory matching the source
+directory name. For example, banking_customers.csv should go to
+/Volumes/<your_catalog>/<your_username>_demo/landing/banking_customers/banking_customers.csv
 ```
 
 **For Pharma:**
 ```
-> Upload all CSV files from the data/pharma/ directory to my Databricks volume at
-> /Volumes/<your_catalog>/<your_username>_demo/landing/ using the Databricks CLI
-> with the WORKSHOP profile.
-> Each CSV file should be placed under its own subdirectory matching the source
-> directory name. For example, retail_sales.csv should go to
-> /Volumes/<your_catalog>/<your_username>_demo/landing/retail_sales/retail_sales.csv
+Upload all CSV files from the data/pharma/ directory to my Databricks volume at
+/Volumes/<your_catalog>/<your_username>_demo/landing/ using the Databricks CLI
+with the WORKSHOP profile.
+Each CSV file should be placed under its own subdirectory matching the source
+directory name. For example, retail_sales.csv should go to
+/Volumes/<your_catalog>/<your_username>_demo/landing/retail_sales/retail_sales.csv
 ```
 
 **Validate in the workspace:**
@@ -397,64 +397,64 @@ Now let's build the heart of the data pipeline — a **Spark Declarative Pipelin
 
 **For FSI:**
 ```
-> Create a Databricks Spark Declarative Pipeline called <your_username>_ingestion
-> targeting the schema <your_catalog>.<your_username>_demo.
-> The pipeline should read CSV files from
-> /Volumes/<your_catalog>/<your_username>_demo/landing/
-> and process them through bronze, silver, and gold layers.
->
-> Create three SQL files:
-> 1. 01_bronze.sql - Ingest raw CSV data from the landing volume into bronze
->    streaming tables. Create one streaming table per CSV source. Tables should
->    be prefixed with "01_" (e.g., 01_banking_customers, 01_banking_transactions).
->    Use Auto Loader (cloud_files) to read from the volumes.
->
-> 2. 02_silver.sql - Clean and transform bronze data into silver streaming tables.
->    Apply data quality constraints (NOT NULL on key columns, valid ranges).
->    Tables should be prefixed with "02_" (e.g., 02_banking_customers).
->    Standardize data types, trim strings, and handle nulls.
->
-> 3. 03_gold.sql - Create gold materialized views with business-level aggregations.
->    Tables should be prefixed with "03_". Examples:
->    - 03_customer_360: Unified view of banking + insurance customers
->    - 03_policy_claims_summary: Claims aggregated by policy type
->    - 03_transaction_daily_summary: Daily transaction volumes and amounts
->    - 03_branch_performance: Branch-level metrics
->    - 03_customer_risk_profile: Risk scoring combining banking and insurance data
->
-> Deploy the pipeline to my Databricks workspace using the Databricks CLI with
-> the WORKSHOP profile.
+Create a Databricks Spark Declarative Pipeline called <your_username>_ingestion
+targeting the schema <your_catalog>.<your_username>_demo.
+The pipeline should read CSV files from
+/Volumes/<your_catalog>/<your_username>_demo/landing/
+and process them through bronze, silver, and gold layers.
+
+Create three SQL files:
+1. 01_bronze.sql - Ingest raw CSV data from the landing volume into bronze
+   streaming tables. Create one streaming table per CSV source. Tables should
+   be prefixed with "01_" (e.g., 01_banking_customers, 01_banking_transactions).
+   Use Auto Loader (cloud_files) to read from the volumes.
+
+2. 02_silver.sql - Clean and transform bronze data into silver streaming tables.
+   Apply data quality constraints (NOT NULL on key columns, valid ranges).
+   Tables should be prefixed with "02_" (e.g., 02_banking_customers).
+   Standardize data types, trim strings, and handle nulls.
+
+3. 03_gold.sql - Create gold materialized views with business-level aggregations.
+   Tables should be prefixed with "03_". Examples:
+   - 03_customer_360: Unified view of banking + insurance customers
+   - 03_policy_claims_summary: Claims aggregated by policy type
+   - 03_transaction_daily_summary: Daily transaction volumes and amounts
+   - 03_branch_performance: Branch-level metrics
+   - 03_customer_risk_profile: Risk scoring combining banking and insurance data
+
+Deploy the pipeline to my Databricks workspace using the Databricks CLI with
+the WORKSHOP profile.
 ```
 
 **For Pharma:**
 ```
-> Create a Databricks Spark Declarative Pipeline called <your_username>_ingestion
-> targeting the schema <your_catalog>.<your_username>_demo.
-> The pipeline should read CSV files from
-> /Volumes/<your_catalog>/<your_username>_demo/landing/
-> and process them through bronze, silver, and gold layers.
->
-> Create three SQL files:
-> 1. 01_bronze.sql - Ingest raw CSV data from the landing volume into bronze
->    streaming tables. Create one streaming table per CSV source. Tables should
->    be prefixed with "01_" (e.g., 01_manufacturing_batches, 01_retail_sales).
->    Use Auto Loader (cloud_files) to read from the volumes.
->
-> 2. 02_silver.sql - Clean and transform bronze data into silver streaming tables.
->    Apply data quality constraints (NOT NULL on key columns, valid ranges,
->    temperature bounds for cold chain). Tables should be prefixed with "02_".
->    Standardize data types, trim strings, and handle nulls.
->
-> 3. 03_gold.sql - Create gold materialized views with business-level aggregations.
->    Tables should be prefixed with "03_". Examples:
->    - 03_batch_quality_summary: Quality pass/fail rates by product and facility
->    - 03_cold_chain_compliance: Temperature compliance rates by route
->    - 03_inventory_status: Current inventory levels with expiry risk
->    - 03_sales_by_outlet: Sales aggregated by outlet, product, and time period
->    - 03_supply_chain_overview: End-to-end supply chain metrics from supplier to retail
->
-> Deploy the pipeline to my Databricks workspace using the Databricks CLI with
-> the WORKSHOP profile.
+Create a Databricks Spark Declarative Pipeline called <your_username>_ingestion
+targeting the schema <your_catalog>.<your_username>_demo.
+The pipeline should read CSV files from
+/Volumes/<your_catalog>/<your_username>_demo/landing/
+and process them through bronze, silver, and gold layers.
+
+Create three SQL files:
+1. 01_bronze.sql - Ingest raw CSV data from the landing volume into bronze
+   streaming tables. Create one streaming table per CSV source. Tables should
+   be prefixed with "01_" (e.g., 01_manufacturing_batches, 01_retail_sales).
+   Use Auto Loader (cloud_files) to read from the volumes.
+
+2. 02_silver.sql - Clean and transform bronze data into silver streaming tables.
+   Apply data quality constraints (NOT NULL on key columns, valid ranges,
+   temperature bounds for cold chain). Tables should be prefixed with "02_".
+   Standardize data types, trim strings, and handle nulls.
+
+3. 03_gold.sql - Create gold materialized views with business-level aggregations.
+   Tables should be prefixed with "03_". Examples:
+   - 03_batch_quality_summary: Quality pass/fail rates by product and facility
+   - 03_cold_chain_compliance: Temperature compliance rates by route
+   - 03_inventory_status: Current inventory levels with expiry risk
+   - 03_sales_by_outlet: Sales aggregated by outlet, product, and time period
+   - 03_supply_chain_overview: End-to-end supply chain metrics from supplier to retail
+
+Deploy the pipeline to my Databricks workspace using the Databricks CLI with
+the WORKSHOP profile.
 ```
 
 **Validate in the workspace:**
@@ -475,17 +475,17 @@ Start the pipeline:
 **If the pipeline doesn't have a root directory configured**, use this prompt in Claude Code:
 
 ```
-> The pipeline <your_username>_ingestion doesn't have its root directory set.
-> Update the pipeline configuration to set the root directory to the path where
-> the SQL files were created. Use the Databricks CLI with the WORKSHOP profile.
+The pipeline <your_username>_ingestion doesn't have its root directory set.
+Update the pipeline configuration to set the root directory to the path where
+the SQL files were created. Use the Databricks CLI with the WORKSHOP profile.
 ```
 
 **If the pipeline fails**, use Claude Code to troubleshoot:
 
 ```
-> The pipeline <your_username>_ingestion failed. Can you check the pipeline
-> status and error details using the Databricks CLI with the WORKSHOP profile,
-> and suggest fixes?
+The pipeline <your_username>_ingestion failed. Can you check the pipeline
+status and error details using the Databricks CLI with the WORKSHOP profile,
+and suggest fixes?
 ```
 
 **Validate the results:**
@@ -502,43 +502,43 @@ Now let's make the gold-layer data accessible to business users through **Genie 
 **Create Genie Spaces:**
 
 ```
-> Create 2 Databricks Genie spaces using the Databricks API with the WORKSHOP profile:
->
-> 1. "<your_username> - Customer Analytics" - Include the gold tables related to
->    customers and risk profiles (e.g., 03_customer_360, 03_customer_risk_profile
->    for FSI, or 03_sales_by_outlet, 03_inventory_status for Pharma).
->    Add a description explaining what business questions this space can answer.
->
-> 2. "<your_username> - Operations Analytics" - Include the gold tables related to
->    operations and performance (e.g., 03_transaction_daily_summary,
->    03_branch_performance for FSI, or 03_batch_quality_summary,
->    03_cold_chain_compliance for Pharma).
->    Add a description explaining what business questions this space can answer.
->
-> Use the SQL warehouse available in the workspace.
+Create 2 Databricks Genie spaces using the Databricks API with the WORKSHOP profile:
+
+1. "<your_username> - Customer Analytics" - Include the gold tables related to
+   customers and risk profiles (e.g., 03_customer_360, 03_customer_risk_profile
+   for FSI, or 03_sales_by_outlet, 03_inventory_status for Pharma).
+   Add a description explaining what business questions this space can answer.
+
+2. "<your_username> - Operations Analytics" - Include the gold tables related to
+   operations and performance (e.g., 03_transaction_daily_summary,
+   03_branch_performance for FSI, or 03_batch_quality_summary,
+   03_cold_chain_compliance for Pharma).
+   Add a description explaining what business questions this space can answer.
+
+Use the SQL warehouse available in the workspace.
 ```
 
 **Create Dashboards:**
 
 ```
-> Create 2 Databricks Lakeview dashboards using the Databricks API with the
-> WORKSHOP profile:
->
-> 1. "<your_username> - Customer Insights Dashboard" - Build a dashboard with
->    4-6 visualizations from the customer-related gold tables. Include:
->    - A summary counter/stat for total customers
->    - A bar chart showing distribution by segment or type
->    - A time series chart showing trends
->    - A table with detailed metrics
->
-> 2. "<your_username> - Operations Dashboard" - Build a dashboard with 4-6
->    visualizations from the operations-related gold tables. Include:
->    - Key operational metrics as counters
->    - A bar or pie chart for categorical breakdowns
->    - A time series showing operational trends
->    - A detailed table view
->
-> Use the SQL warehouse available in the workspace and publish both dashboards.
+Create 2 Databricks Lakeview dashboards using the Databricks API with the
+WORKSHOP profile:
+
+1. "<your_username> - Customer Insights Dashboard" - Build a dashboard with
+   4-6 visualizations from the customer-related gold tables. Include:
+   - A summary counter/stat for total customers
+   - A bar chart showing distribution by segment or type
+   - A time series chart showing trends
+   - A table with detailed metrics
+
+2. "<your_username> - Operations Dashboard" - Build a dashboard with 4-6
+   visualizations from the operations-related gold tables. Include:
+   - Key operational metrics as counters
+   - A bar or pie chart for categorical breakdowns
+   - A time series showing operational trends
+   - A detailed table view
+
+Use the SQL warehouse available in the workspace and publish both dashboards.
 ```
 
 **Validate in the workspace:**
