@@ -131,8 +131,8 @@ You should see a list of workspace directories. If you get an authentication err
 ### Step 5: Clone This Repository
 
 ```bash
-git clone https://github.com/muharandy-db/dbsf_vibe_de.git
-cd dbsf_vibe_de
+git clone https://github.com/muharandy-db/dbxf_vibe_de.git
+cd dbxf_vibe_de
 ```
 
 ---
@@ -181,7 +181,7 @@ Before moving on, confirm all prerequisites are in place:
 - [ ] `claude --version` returns a version number
 - [ ] `databricks --version` returns a version number
 - [ ] `databricks workspace list / --profile WORKSHOP` returns workspace contents
-- [ ] Repository cloned and you are in the `dbsf_vibe_de` directory
+- [ ] Repository cloned and you are in the `dbxf_vibe_de` directory
 - [ ] AI Dev Kit installed (`.claude/` directory exists in project root)
 
 ---
@@ -238,7 +238,7 @@ Each CSV file contains between 150 and 10,000 realistic sample records. Pick an 
 Once Claude Code and the AI Dev Kit are installed, open a terminal and navigate to this repository:
 
 ```bash
-cd /path/to/dbsf_vibe_de
+cd /path/to/dbxf_vibe_de
 ```
 
 Launch Claude Code:
