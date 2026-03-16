@@ -8,7 +8,7 @@ Welcome to the **Vibe Data Engineering Workshop**! In this hands-on tutorial, yo
 
 ## Table of Contents
 
-1. [Prerequisites](#1-prerequisites) — Steps 1–6: workspace, Claude Code, Databricks CLI, AI Dev Kit
+1. [Prerequisites](#1-prerequisites)
 2. [Repository Overview](#2-repository-overview)
 3. [Setting Up Claude Code](#3-setting-up-claude-code)
 4. [Connecting Claude Code to Databricks AI Gateway](#4-connecting-claude-code-to-databricks-ai-gateway)
