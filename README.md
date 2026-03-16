@@ -57,13 +57,6 @@ Verify installation:
 claude --version
 ```
 
-### Clone the AI Dev Kit Repository
-
-```bash
-git clone https://github.com/databricks-solutions/ai-dev-kit.git
-cd ai-dev-kit
-```
-
 ### Install and Configure the Databricks CLI
 
 **macOS (using Homebrew):**
@@ -95,6 +88,58 @@ Verify the connection:
 ```bash
 databricks workspace list / --profile WORKSHOP
 ```
+
+### Install the Databricks AI Dev Kit
+
+The [AI Dev Kit](https://github.com/databricks-solutions/ai-dev-kit) gives your AI coding assistant the tools and knowledge it needs to build on Databricks. Install it directly into this project directory.
+
+Make sure you are in the workshop repository root before running the installer:
+```bash
+cd /path/to/dbsf_vibe_de
+```
+
+**macOS / Linux:**
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/databricks-solutions/ai-dev-kit/main/install.sh)
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/databricks-solutions/ai-dev-kit/main/install.ps1 | iex
+```
+
+Follow the interactive prompts to complete the setup. The installer will configure Claude Code with the Databricks MCP server and skills for this project.
+
+> **Note:** This installs at project level, so you must run Claude Code from this directory. The configuration files are created under `.claude/` in the project root.
+
+<details>
+<summary><strong>Advanced Options</strong> (click to expand)</summary>
+
+**Specify a Databricks CLI profile:**
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/databricks-solutions/ai-dev-kit/main/install.sh) --profile WORKSHOP
+```
+
+**Force reinstall (if you need to reconfigure):**
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/databricks-solutions/ai-dev-kit/main/install.sh) --force
+```
+
+**Install for specific tools only:**
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/databricks-solutions/ai-dev-kit/main/install.sh) --tools claude
+```
+
+</details>
+
+### Prerequisites Summary
+
+| Prerequisite | Install Command | Verify |
+|---|---|---|
+| Databricks Workspace | _(provided by your admin)_ | Log in to workspace URL |
+| Claude Code | `npm install -g @anthropic-ai/claude-code` | `claude --version` |
+| Databricks CLI | `brew install databricks` (macOS) | `databricks --version` |
+| AI Dev Kit | `bash <(curl -sL ...)` (see above) | Check `.claude/` directory exists |
 
 ---
 
@@ -147,10 +192,10 @@ Each CSV file contains between 150 and 10,000 realistic sample records. Pick an 
 
 ## 3. Setting Up Claude Code
 
-Once Claude Code is installed, open a terminal and navigate to this repository:
+Once Claude Code and the AI Dev Kit are installed, open a terminal and navigate to this repository:
 
 ```bash
-cd /path/to/dbxf_vibe_de
+cd /path/to/dbsf_vibe_de
 ```
 
 Launch Claude Code:
@@ -158,13 +203,15 @@ Launch Claude Code:
 claude
 ```
 
-On first launch, Claude Code will prompt you to authenticate. Follow the on-screen instructions to sign in.
+On first launch, Claude Code will prompt you to authenticate. Follow the on-screen instructions to sign in. The AI Dev Kit installer has already configured the Databricks MCP server and skills for this project.
 
 ---
 
 ## 4. Connecting Claude Code to Databricks AI Gateway
 
 Databricks **AI Gateway** allows you to route AI model requests through your Databricks workspace, giving you centralized governance, observability, and cost management for all your AI coding tools.
+
+> **Why use AI Gateway?** Instead of each developer using their own Anthropic API key, AI Gateway routes all requests through Databricks — giving you unified billing, usage monitoring, and governance across all coding tools.
 
 ### Step 1: Open AI Gateway in Your Workspace
 
