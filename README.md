@@ -173,22 +173,23 @@ Databricks will show you the `settings.json` configuration and a **Generate API 
 
 ### Step 4: Configure Claude Code
 
-Update your Claude Code settings file at `~/.claude/settings.json`:
+Update your Claude Code settings file at `~/.claude/settings.json` with the configuration from the previous step:
 
 ```json
 {
-  "apiKeyHelper": "echo <YOUR_DATABRICKS_API_KEY>",
-  "model": "databricks-claude-sonnet-4",
-  "apiBaseUrl": "https://<your-workspace-url>/serving-endpoints/databricks-claude-sonnet-4",
-  "loginDisabled": true
+    "env": {
+        "ANTHROPIC_MODEL": "databricks-claude-opus-4-6",
+        "ANTHROPIC_BASE_URL": "https://<your-ai-gateway-url>/anthropic",
+        "ANTHROPIC_AUTH_TOKEN": "<your_token_will_appear_here>",
+        "ANTHROPIC_CUSTOM_HEADERS": "x-databricks-use-coding-agent-mode: true",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
+    }
 }
 ```
 
 Replace:
-- `<YOUR_DATABRICKS_API_KEY>` with the API key from AI Gateway
-- `<your-workspace-url>` with your Databricks workspace URL
-
-> **Tip:** Setting `"loginDisabled": true` prevents Claude Code from prompting you to log in through Anthropic directly, ensuring all requests route through your Databricks AI Gateway.
+- `<your-ai-gateway-url>` with the AI Gateway URL shown in Step 3 (e.g., `https://7474644321313099.ai-gateway.cloud.databricks.com`)
+- `<your_token_will_appear_here>` with the API key generated in Step 3
 
 ### Step 5: Verify the Connection
 
