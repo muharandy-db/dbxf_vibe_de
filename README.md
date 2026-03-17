@@ -16,9 +16,11 @@ Welcome to the **Vibe Data Engineering Workshop**! In this hands-on tutorial, yo
    - [Exercise 1: Create a Schema](#exercise-1-create-a-schema)
    - [Exercise 2: Create a Landing Volume](#exercise-2-create-a-landing-volume)
    - [Exercise 3: Upload Data to Volume](#exercise-3-upload-data-to-volume)
-   - [Exercise 4: Create a Declarative Pipeline (Bronze → Silver → Gold)](#exercise-4-create-a-declarative-pipeline-bronze--silver--gold)
-   - [Exercise 5: Validate and Run the Pipeline](#exercise-5-validate-and-run-the-pipeline)
-   - [Exercise 6: Create Genie Spaces and Dashboards](#exercise-6-create-genie-spaces-and-dashboards)
+   - [Exercise 4: Create the Pipeline and Bronze Layer](#exercise-4-create-the-pipeline-and-bronze-layer)
+   - [Exercise 5: Add the Silver Layer](#exercise-5-add-the-silver-layer)
+   - [Exercise 6: Add Gold Layer Tables](#exercise-6-add-gold-layer-tables)
+   - [Exercise 7: Validate and Run the Pipeline](#exercise-7-validate-and-run-the-pipeline)
+   - [Exercise 8: Create Genie Spaces and Dashboards](#exercise-8-create-genie-spaces-and-dashboards)
 6. [Wrap-Up](#6-wrap-up)
 
 ---
@@ -391,36 +393,21 @@ directory name. For example, retail_sales.csv should go to
 
 ---
 
-### Exercise 4: Create a Declarative Pipeline (Bronze → Silver → Gold)
+### Exercise 4: Create the Pipeline and Bronze Layer
 
-Now let's build the heart of the data pipeline — a **Spark Declarative Pipeline** using SQL.
+First, create the pipeline and ingest raw data into bronze streaming tables.
 
 **For FSI:**
 ```
 Create a Databricks Spark Declarative Pipeline called <your_username>_ingestion
 targeting the schema <your_catalog>.<your_username>_demo.
-The pipeline should read CSV files from
-/Volumes/<your_catalog>/<your_username>_demo/landing/
-and process them through bronze, silver, and gold layers.
 
-Create three SQL files:
-1. 01_bronze.sql - Ingest raw CSV data from the landing volume into bronze
-   streaming tables. Create one streaming table per CSV source. Tables should
-   be prefixed with "01_" (e.g., 01_banking_customers, 01_banking_transactions).
-   Use Auto Loader (cloud_files) to read from the volumes.
-
-2. 02_silver.sql - Clean and transform bronze data into silver streaming tables.
-   Apply data quality constraints (NOT NULL on key columns, valid ranges).
-   Tables should be prefixed with "02_" (e.g., 02_banking_customers).
-   Standardize data types, trim strings, and handle nulls.
-
-3. 03_gold.sql - Create gold materialized views with business-level aggregations.
-   Tables should be prefixed with "03_". Examples:
-   - 03_customer_360: Unified view of banking + insurance customers
-   - 03_policy_claims_summary: Claims aggregated by policy type
-   - 03_transaction_daily_summary: Daily transaction volumes and amounts
-   - 03_branch_performance: Branch-level metrics
-   - 03_customer_risk_profile: Risk scoring combining banking and insurance data
+Create a SQL file called 01_bronze.sql that ingests raw CSV data from
+/Volumes/<your_catalog>/<your_username>_demo/landing/ into bronze streaming tables.
+Create one streaming table per CSV source. Tables should be prefixed with "01_"
+(e.g., 01_banking_customers, 01_banking_transactions, 01_banking_accounts,
+01_banking_branches, 01_insurance_customers, 01_insurance_policies, 01_insurance_claims).
+Use Auto Loader (cloud_files) to read from the volumes.
 
 Deploy the pipeline to my Databricks workspace using the Databricks CLI with
 the WORKSHOP profile.
@@ -430,28 +417,14 @@ the WORKSHOP profile.
 ```
 Create a Databricks Spark Declarative Pipeline called <your_username>_ingestion
 targeting the schema <your_catalog>.<your_username>_demo.
-The pipeline should read CSV files from
-/Volumes/<your_catalog>/<your_username>_demo/landing/
-and process them through bronze, silver, and gold layers.
 
-Create three SQL files:
-1. 01_bronze.sql - Ingest raw CSV data from the landing volume into bronze
-   streaming tables. Create one streaming table per CSV source. Tables should
-   be prefixed with "01_" (e.g., 01_manufacturing_batches, 01_retail_sales).
-   Use Auto Loader (cloud_files) to read from the volumes.
-
-2. 02_silver.sql - Clean and transform bronze data into silver streaming tables.
-   Apply data quality constraints (NOT NULL on key columns, valid ranges,
-   temperature bounds for cold chain). Tables should be prefixed with "02_".
-   Standardize data types, trim strings, and handle nulls.
-
-3. 03_gold.sql - Create gold materialized views with business-level aggregations.
-   Tables should be prefixed with "03_". Examples:
-   - 03_batch_quality_summary: Quality pass/fail rates by product and facility
-   - 03_cold_chain_compliance: Temperature compliance rates by route
-   - 03_inventory_status: Current inventory levels with expiry risk
-   - 03_sales_by_outlet: Sales aggregated by outlet, product, and time period
-   - 03_supply_chain_overview: End-to-end supply chain metrics from supplier to retail
+Create a SQL file called 01_bronze.sql that ingests raw CSV data from
+/Volumes/<your_catalog>/<your_username>_demo/landing/ into bronze streaming tables.
+Create one streaming table per CSV source. Tables should be prefixed with "01_"
+(e.g., 01_manufacturing_batches, 01_manufacturing_quality, 01_distribution_cold_chains,
+01_distribution_warehouses, 01_retail_outlets, 01_retail_inventory, 01_retail_sales,
+01_supply_materials, 01_supply_suppliers).
+Use Auto Loader (cloud_files) to read from the volumes.
 
 Deploy the pipeline to my Databricks workspace using the Databricks CLI with
 the WORKSHOP profile.
@@ -460,11 +433,129 @@ the WORKSHOP profile.
 **Validate in the workspace:**
 1. In the left sidebar, click **Pipelines** (under Data Engineering)
 2. Find your pipeline: `<your_username>_ingestion`
-3. Verify that the three SQL files are listed as source code
+3. Verify that the `01_bronze.sql` file is listed as source code
+4. Review the generated SQL — does it look correct?
 
 ---
 
-### Exercise 5: Validate and Run the Pipeline
+### Exercise 5: Add the Silver Layer
+
+Now add data quality constraints and transformations on top of the bronze tables.
+
+**For FSI:**
+```
+Add a SQL file called 02_silver.sql to the existing <your_username>_ingestion pipeline.
+This file should clean and transform the bronze tables into silver streaming tables.
+Tables should be prefixed with "02_" (e.g., 02_banking_customers, 02_insurance_policies).
+Apply data quality constraints (NOT NULL on key columns, valid ranges).
+Standardize data types, trim strings, and handle nulls.
+```
+
+**For Pharma:**
+```
+Add a SQL file called 02_silver.sql to the existing <your_username>_ingestion pipeline.
+This file should clean and transform the bronze tables into silver streaming tables.
+Tables should be prefixed with "02_" (e.g., 02_manufacturing_batches, 02_retail_sales).
+Apply data quality constraints (NOT NULL on key columns, valid ranges,
+temperature bounds for cold chain data).
+Standardize data types, trim strings, and handle nulls.
+```
+
+**Validate:**
+1. Review the generated `02_silver.sql` — check that constraints make sense for your data
+2. Confirm the file is added to the pipeline source code in the workspace
+
+---
+
+### Exercise 6: Add Gold Layer Tables
+
+Now create business-level aggregations as gold materialized views. We'll create **one table at a time** so you can review each one.
+
+#### FSI Gold Tables
+
+**Gold Table 1 — Customer 360:**
+```
+Add a gold materialized view called 03_customer_360 to the <your_username>_ingestion
+pipeline in a new SQL file called 03_gold.sql. This view should create a unified
+profile of banking and insurance customers by joining 02_banking_customers and
+02_insurance_customers, enriched with account and policy counts.
+```
+
+**Gold Table 2 — Policy Claims Summary:**
+```
+Add a gold materialized view called 03_policy_claims_summary to 03_gold.sql.
+This view should aggregate claims by policy type, showing total claims, approved vs
+denied counts, average claim amount, and total settlement amounts from the silver tables.
+```
+
+**Gold Table 3 — Transaction Daily Summary:**
+```
+Add a gold materialized view called 03_transaction_daily_summary to 03_gold.sql.
+This view should aggregate daily transaction volumes and amounts by transaction type
+and channel from 02_banking_transactions.
+```
+
+**Gold Table 4 — Branch Performance:**
+```
+Add a gold materialized view called 03_branch_performance to 03_gold.sql.
+This view should show branch-level metrics including total accounts, total balances,
+transaction counts, and active customer counts by joining branch, account, and
+transaction silver tables.
+```
+
+**Gold Table 5 — Customer Risk Profile:**
+```
+Add a gold materialized view called 03_customer_risk_profile to 03_gold.sql.
+This view should combine banking risk ratings with insurance claim history to
+create a unified risk score per customer.
+```
+
+#### Pharma Gold Tables
+
+**Gold Table 1 — Batch Quality Summary:**
+```
+Add a gold materialized view called 03_batch_quality_summary to the
+<your_username>_ingestion pipeline in a new SQL file called 03_gold.sql.
+This view should aggregate quality test pass/fail rates by product and facility
+from 02_manufacturing_quality and 02_manufacturing_batches.
+```
+
+**Gold Table 2 — Cold Chain Compliance:**
+```
+Add a gold materialized view called 03_cold_chain_compliance to 03_gold.sql.
+This view should calculate temperature compliance rates by route and carrier,
+flagging shipments that exceeded temperature thresholds from 02_distribution_cold_chains.
+```
+
+**Gold Table 3 — Inventory Status:**
+```
+Add a gold materialized view called 03_inventory_status to 03_gold.sql.
+This view should show current inventory levels with expiry risk by outlet and product,
+joining 02_retail_inventory with 02_retail_outlets.
+```
+
+**Gold Table 4 — Sales by Outlet:**
+```
+Add a gold materialized view called 03_sales_by_outlet to 03_gold.sql.
+This view should aggregate sales by outlet, product, and month from
+02_retail_sales joined with 02_retail_outlets.
+```
+
+**Gold Table 5 — Supply Chain Overview:**
+```
+Add a gold materialized view called 03_supply_chain_overview to 03_gold.sql.
+This view should provide end-to-end supply chain metrics from supplier to retail,
+joining 02_supply_suppliers, 02_supply_materials, 02_manufacturing_batches,
+02_distribution_cold_chains, and 02_retail_inventory.
+```
+
+**Validate all gold tables:**
+1. Review `03_gold.sql` — confirm each materialized view looks correct
+2. In the workspace, verify the pipeline now shows all three SQL files
+
+---
+
+### Exercise 7: Validate and Run the Pipeline
 
 Start the pipeline:
 
@@ -495,7 +586,7 @@ and suggest fixes?
 
 ---
 
-### Exercise 6: Create Genie Spaces and Dashboards
+### Exercise 8: Create Genie Spaces and Dashboards
 
 Now let's make the gold-layer data accessible to business users through **Genie Spaces** and **Dashboards**.
 
@@ -558,9 +649,11 @@ Congratulations! You've completed the Vibe Data Engineering Workshop! Here's wha
 | Exercise 1 | A Unity Catalog schema for your demo |
 | Exercise 2 | A managed volume for landing raw data |
 | Exercise 3 | Uploaded industry sample data to the volume |
-| Exercise 4 | A Spark Declarative Pipeline with bronze, silver, and gold layers |
-| Exercise 5 | Ran and validated the end-to-end pipeline |
-| Exercise 6 | Genie spaces and dashboards for business analytics |
+| Exercise 4 | A Spark Declarative Pipeline with bronze ingestion |
+| Exercise 5 | Silver layer with data quality constraints |
+| Exercise 6 | Gold layer materialized views for business analytics |
+| Exercise 7 | Ran and validated the end-to-end pipeline |
+| Exercise 8 | Genie spaces and dashboards for business analytics |
 
 **Key takeaways:**
 - You built a complete data pipeline **using only natural language prompts**
