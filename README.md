@@ -153,20 +153,23 @@ Databricks **AI Gateway** allows you to route AI model requests through your Dat
 
 1. Log in to your **Databricks workspace**
 2. In the left sidebar, click on **AI Gateway**
-3. Click **Integrate coding agents** (or the "Get Started" button)
+3. Click **Coding agents** tab, then click **Other Integrations**
 
-### Step 2: Select Claude Code Integration
+![AI Gateway — Coding agents overview](images/4_claude_code_setup_step-1.png)
 
-1. Select **Other integrations**
-2. Choose **Claude Code** as your coding agent
-3. Select your preferred Anthropic model (e.g., Claude Sonnet 4)
-4. The UI will display your **AI Gateway endpoint URL** and generate **API credentials**
+### Step 2: Select Claude Code and Configure Models
+
+1. Select **Claude Code** as your coding integration
+2. Choose your default Anthropic model and optional Opus/Sonnet/Haiku models
+3. Review the settings and proceed to the next step
+
+![Select Claude Code and configure models](images/4_claude_code_setup_step-2.png)
 
 ### Step 3: Copy the Configuration
 
-Databricks will show you the configuration to add. Take note of:
-- The **AI Gateway endpoint URL** (looks like: `https://<workspace-url>/serving-endpoints/databricks-claude-sonnet-4/invocations`)
-- The **API key** (a model-scoped Databricks personal access token)
+Databricks will show you the `settings.json` configuration and a **Generate API Key** button. Click it to generate your API key, then copy the full configuration block.
+
+![Copy settings.json configuration and generate API key](images/4_claude_code_setup_step-3.png)
 
 ### Step 4: Configure Claude Code
 
