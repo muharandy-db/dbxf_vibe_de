@@ -162,19 +162,19 @@ Databricks **AI Gateway** allows you to route AI model requests through your Dat
 
 1. Log in to your **Databricks workspace**
 2. In the left sidebar, click on **AI Gateway**
-3. Click **Coding agents** tab, then click **Other Integrations**
+3. Click **Coding agents** tab — you'll see the available integrations including Codex CLI
 
-### Step 2: Select Codex CLI and Configure Models
+![AI Gateway — Coding agents overview](images/4_codex_setup_step-1.png)
+
+### Step 2: Configure Codex CLI and Generate API Key
 
 1. Select **Codex CLI** as your coding integration
-2. Choose your default OpenAI model
-3. Review the settings and proceed to the next step
+2. Click **Generate API Key** to create your Databricks token
+3. The UI will show you the environment variable setup and the full `config.toml` configuration
 
-### Step 3: Copy the Configuration
+![Codex CLI configuration and config.toml](images/4_codex_setup_step-2.png)
 
-Databricks will show you the configuration and a **Generate API Key** button. Click it to generate your API key, then copy the configuration.
-
-### Step 4: Configure Codex CLI
+### Step 3: Configure Codex CLI
 
 First, set the Databricks token as an environment variable:
 
@@ -201,10 +201,10 @@ wire_api = "responses"
 ```
 
 Replace:
-- `<your-ai-gateway-url>` with the AI Gateway URL shown in Step 3 (e.g., `https://7474644321313099.ai-gateway.cloud.databricks.com`)
-- `<your_databricks_pat_token>` with the API key generated in Step 3
+- `<your-ai-gateway-url>` with the AI Gateway URL shown in Step 2 (e.g., `https://7474644321313099.ai-gateway.cloud.databricks.com`)
+- `<your_databricks_pat_token>` with the API key generated in Step 2
 
-### Step 5: Verify the Connection
+### Step 4: Verify the Connection
 
 Restart Codex CLI and try a simple prompt:
 ```
