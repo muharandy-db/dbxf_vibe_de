@@ -1,15 +1,16 @@
-# Vibe Data Engineering Workshop with Databricks (Free Edition)
+# Vibe Data Engineering Workshop with Databricks (Codex CLI)
 
 Welcome to the **Vibe Data Engineering Workshop**! In this hands-on tutorial, you'll use **Codex CLI** (an AI-powered coding agent by OpenAI) together with **Databricks** to build a complete data pipeline — from raw CSV ingestion to curated gold-layer tables, Genie spaces, and dashboards — all driven by natural language prompts.
 
 > **What is Vibe Data Engineering?** It's the practice of using AI coding agents to build and manage data pipelines through conversational prompts instead of writing every line of code manually. You describe *what* you want, and the AI helps you build it.
 
-### Choose Your Edition
+### Choose Your Coding Agent
 
-| Edition | Coding Agent | Guide |
-|---------|-------------|-------|
-| **Databricks Free Edition** | Codex CLI | You are here |
-| **Databricks Express / Enterprise Edition** | Claude Code | [**Go to Express/Enterprise setup**](README.md) |
+| Coding Agent | Provider | Guide |
+|-------------|----------|-------|
+| **Claude Code** | Anthropic | [**Go to Claude Code setup**](README.md) |
+| **Codex CLI** | OpenAI | You are here |
+| **Cursor** | Anysphere | [**Go to Cursor setup**](README_CURSOR.md) |
 
 ---
 
@@ -244,6 +245,7 @@ Both tutorials follow the same structure:
 
 ---
 
-> **Workshop created for Databricks Free Edition** — Using Codex CLI
-> For the Express/Enterprise Edition version (using Claude Code), see [README.md](README.md).
+> **Workshop guide for Codex CLI** — by OpenAI
+>
+> For other coding agents, see [Claude Code](README.md) or [Cursor](README_CURSOR.md).
 > For questions or feedback, reach out to your workshop facilitator.

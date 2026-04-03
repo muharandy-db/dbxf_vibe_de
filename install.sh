@@ -29,10 +29,11 @@ print_step 1 "Choose your coding agent"
 echo ""
 echo "  Which coding agent would you like to use?"
 echo ""
-echo "    1) Claude Code  — recommended for Databricks Express / Enterprise Edition"
-echo "    2) Codex CLI    — recommended for Databricks Free Edition"
+echo "    1) Claude Code  — by Anthropic (terminal-based)"
+echo "    2) Codex CLI    — by OpenAI (terminal-based)"
+echo "    3) Cursor        — by Anysphere (IDE-based)"
 echo ""
-read -p "  Enter your choice (1 or 2): " agent_choice
+read -p "  Enter your choice (1, 2, or 3): " agent_choice
 
 case "$agent_choice" in
     2)
@@ -41,6 +42,15 @@ case "$agent_choice" in
         AGENT_INSTALL_NPM="@openai/codex"
         AGENT_INSTALL_BREW=""
         AGENT_CONFIG_DIR=".codex"
+        AGENT_IS_IDE=false
+        ;;
+    3)
+        AGENT_NAME="Cursor"
+        AGENT_CMD="cursor"
+        AGENT_INSTALL_NPM=""
+        AGENT_INSTALL_BREW=""
+        AGENT_CONFIG_DIR=".cursor"
+        AGENT_IS_IDE=true
         ;;
     *)
         AGENT_NAME="Claude Code"
@@ -48,6 +58,7 @@ case "$agent_choice" in
         AGENT_INSTALL_NPM="@anthropic-ai/claude-code"
         AGENT_INSTALL_BREW="claude-code"
         AGENT_CONFIG_DIR=".claude"
+        AGENT_IS_IDE=false
         ;;
 esac
 
@@ -56,26 +67,43 @@ print_ok "Selected: $AGENT_NAME"
 # ─── Step 2: Install Coding Agent ────────────────────────────────
 print_step 2 "Installing $AGENT_NAME"
 
-if command -v "$AGENT_CMD" &>/dev/null; then
-    print_ok "$AGENT_NAME already installed ($($AGENT_CMD --version 2>/dev/null || echo 'unknown version'))"
-else
-    if [ -n "$AGENT_INSTALL_BREW" ] && command -v brew &>/dev/null; then
-        echo "  Installing via Homebrew..."
-        brew install "$AGENT_INSTALL_BREW"
-    elif command -v npm &>/dev/null; then
-        echo "  Installing via npm..."
-        npm install -g "$AGENT_INSTALL_NPM"
-    else
-        print_err "Neither Homebrew nor npm found."
-        echo "  Please install Node.js 18+ from https://nodejs.org/ and re-run this script."
-        exit 1
-    fi
-
+if $AGENT_IS_IDE; then
     if command -v "$AGENT_CMD" &>/dev/null; then
-        print_ok "$AGENT_NAME installed successfully"
+        print_ok "$AGENT_NAME already installed"
     else
-        print_err "$AGENT_NAME installation failed. Please install manually and re-run."
-        exit 1
+        print_warn "$AGENT_NAME is an IDE application — it cannot be installed from the terminal."
+        echo "  Please download and install $AGENT_NAME from https://www.cursor.com/ and re-run this script."
+        echo ""
+        read -p "  Have you already installed $AGENT_NAME? (y/N): " cursor_installed
+        if [[ "$cursor_installed" =~ ^[Yy]$ ]]; then
+            print_ok "$AGENT_NAME confirmed installed by user"
+        else
+            print_err "Please install $AGENT_NAME first, then re-run this script."
+            exit 1
+        fi
+    fi
+else
+    if command -v "$AGENT_CMD" &>/dev/null; then
+        print_ok "$AGENT_NAME already installed ($($AGENT_CMD --version 2>/dev/null || echo 'unknown version'))"
+    else
+        if [ -n "$AGENT_INSTALL_BREW" ] && command -v brew &>/dev/null; then
+            echo "  Installing via Homebrew..."
+            brew install "$AGENT_INSTALL_BREW"
+        elif [ -n "$AGENT_INSTALL_NPM" ] && command -v npm &>/dev/null; then
+            echo "  Installing via npm..."
+            npm install -g "$AGENT_INSTALL_NPM"
+        else
+            print_err "Neither Homebrew nor npm found."
+            echo "  Please install Node.js 18+ from https://nodejs.org/ and re-run this script."
+            exit 1
+        fi
+
+        if command -v "$AGENT_CMD" &>/dev/null; then
+            print_ok "$AGENT_NAME installed successfully"
+        else
+            print_err "$AGENT_NAME installation failed. Please install manually and re-run."
+            exit 1
+        fi
     fi
 fi
 

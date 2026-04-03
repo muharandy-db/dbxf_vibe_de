@@ -1,6 +1,6 @@
-# Vibe Data Engineering Workshop with Databricks
+# Vibe Data Engineering Workshop with Databricks (Cursor)
 
-Welcome to the **Vibe Data Engineering Workshop**! In this hands-on tutorial, you'll use an AI-powered coding agent together with **Databricks** to build a complete data pipeline — from raw CSV ingestion to curated gold-layer tables, Genie spaces, and dashboards — all driven by natural language prompts.
+Welcome to the **Vibe Data Engineering Workshop**! In this hands-on tutorial, you'll use **Cursor** (an AI-powered IDE by Anysphere) together with **Databricks** to build a complete data pipeline — from raw CSV ingestion to curated gold-layer tables, Genie spaces, and dashboards — all driven by natural language prompts.
 
 > **What is Vibe Data Engineering?** It's the practice of using AI coding agents to build and manage data pipelines through conversational prompts instead of writing every line of code manually. You describe *what* you want, and the AI helps you build it.
 
@@ -8,11 +8,9 @@ Welcome to the **Vibe Data Engineering Workshop**! In this hands-on tutorial, yo
 
 | Coding Agent | Provider | Guide |
 |-------------|----------|-------|
-| **Claude Code** | Anthropic | You are here |
+| **Claude Code** | Anthropic | [**Go to Claude Code setup**](README.md) |
 | **Codex CLI** | OpenAI | [**Go to Codex CLI setup**](README_CODEX.md) |
-| **Cursor** | Anysphere | [**Go to Cursor setup**](README_CURSOR.md) |
-
-> Using a different coding agent? Follow the guide for your agent above — each one walks you through setup, AI Gateway configuration, and the same tutorials.
+| **Cursor** | Anysphere | You are here |
 
 ---
 
@@ -20,8 +18,8 @@ Welcome to the **Vibe Data Engineering Workshop**! In this hands-on tutorial, yo
 
 1. [Prerequisites](#1-prerequisites)
 2. [Repository Overview](#2-repository-overview)
-3. [Setting Up Claude Code](#3-setting-up-claude-code)
-4. [Connecting Claude Code to Databricks AI Gateway](#4-connecting-claude-code-to-databricks-ai-gateway)
+3. [Setting Up Cursor](#3-setting-up-cursor)
+4. [Connecting Cursor to Databricks AI Gateway](#4-connecting-cursor-to-databricks-ai-gateway)
 5. [Choose Your Tutorial](#5-choose-your-tutorial)
 
 ---
@@ -31,14 +29,14 @@ Welcome to the **Vibe Data Engineering Workshop**! In this hands-on tutorial, yo
 Before you begin, make sure you have:
 - Access to a **Databricks workspace** ([sign up for a free trial](https://www.databricks.com/try-databricks) if you don't have one)
 - **Git** installed on your machine
-- **Node.js 18+** installed ([nodejs.org](https://nodejs.org/)) — required for Claude Code on Windows/Linux
+- **Cursor** installed ([cursor.com](https://www.cursor.com/)) — the AI-powered IDE
 - **Homebrew** (macOS) or **winget** (Windows) — for package installs
 
 > If you don't have workspace access yet, contact your workshop facilitator before proceeding.
 
 ### One-Command Setup
 
-The installer will handle everything: coding agent selection, Databricks CLI, CLI profile configuration, repo cloning, and AI Dev Kit installation.
+The installer will handle Databricks CLI, CLI profile configuration, repo cloning, and AI Dev Kit installation. Cursor must be installed separately beforehand.
 
 **macOS / Linux:**
 ```bash
@@ -50,18 +48,19 @@ bash <(curl -sL https://raw.githubusercontent.com/muharandy-db/dbxf_vibe_de/main
 irm https://raw.githubusercontent.com/muharandy-db/dbxf_vibe_de/main/install.ps1 | iex
 ```
 
-The script will prompt you to choose between **Claude Code**, **Codex CLI**, and **Cursor**, then walk you through each step interactively. Once complete, you'll be inside the `dbxf_vibe_de` directory with everything configured.
+When prompted, select **Cursor** as your coding agent.
+
+The script will walk you through each step interactively. Once complete, you'll be inside the `dbxf_vibe_de` directory with everything configured.
 
 <details>
 <summary><strong>What does the installer do?</strong></summary>
 
-1. Lets you choose your **coding agent** (Claude Code or Codex CLI)
-2. Installs the selected coding agent (via Homebrew or npm)
-3. Installs **Databricks CLI** (via Homebrew, winget, or curl)
-4. Configures a Databricks CLI profile called `WORKSHOP` (prompts for workspace URL and token)
-5. Clones this repository
-6. Installs the **Databricks AI Dev Kit** (MCP server + skills for your coding agent)
-7. Verifies everything is working
+1. Confirms **Cursor** is installed
+2. Installs **Databricks CLI** (via Homebrew, winget, or curl)
+3. Configures a Databricks CLI profile called `WORKSHOP` (prompts for workspace URL and token)
+4. Clones this repository
+5. Installs the **Databricks AI Dev Kit** (MCP server + skills for your coding agent)
+6. Verifies everything is working
 
 </details>
 
@@ -70,9 +69,7 @@ The script will prompt you to choose between **Claude Code**, **Codex CLI**, and
 
 If you'd rather set things up step by step:
 
-1. Install your coding agent:
-   - Claude Code: `npm install -g @anthropic-ai/claude-code`
-   - Codex CLI: `npm install -g @openai/codex`
+1. Install Cursor: Download from [cursor.com](https://www.cursor.com/)
 2. Install Databricks CLI: `brew install databricks` (macOS) / `winget install Databricks.DatabricksCLI` (Windows)
 3. Configure profile: `databricks configure --profile WORKSHOP`
 4. Clone repo: `git clone https://github.com/muharandy-db/dbxf_vibe_de.git && cd dbxf_vibe_de`
@@ -84,11 +81,11 @@ If you'd rather set things up step by step:
 
 Before moving on, confirm:
 
-- [ ] `claude --version` returns a version number
+- [ ] Cursor is installed and opens successfully
 - [ ] `databricks --version` returns a version number
 - [ ] `databricks workspace list / --profile WORKSHOP` returns workspace contents
 - [ ] You are in the `dbxf_vibe_de` directory
-- [ ] `.claude/` directory exists in the project root
+- [ ] `.cursor/` directory exists in the project root
 
 ---
 
@@ -139,28 +136,27 @@ Each CSV file contains between 150 and 10,000 realistic sample records. Pick an 
 
 ---
 
-## 3. Setting Up Claude Code
+## 3. Setting Up Cursor
 
-Once Claude Code and the AI Dev Kit are installed, open a terminal and navigate to this repository:
+Once Cursor and the AI Dev Kit are installed, open the workshop repository in Cursor:
 
-```bash
-cd /path/to/dbxf_vibe_de
-```
+1. Launch **Cursor**
+2. Go to **File → Open Folder** and select the `dbxf_vibe_de` directory
+3. The AI Dev Kit installer has already configured the Databricks MCP server and skills in `.cursor/mcp.json`
 
-Launch Claude Code:
-```bash
-claude
-```
+To start interacting with the AI agent, open the **Composer** panel:
+- Press `Cmd+I` (macOS) or `Ctrl+I` (Windows/Linux) to open Composer
+- Or click the **Composer** icon in the sidebar
 
-On first launch, Claude Code will prompt you to authenticate. Follow the on-screen instructions to sign in. The AI Dev Kit installer has already configured the Databricks MCP server and skills for this project.
+> **Tip:** Make sure you're in **Agent** mode (not just "Ask" or "Edit") so that Cursor can execute commands and interact with your Databricks workspace through the MCP tools.
 
 ---
 
-## 4. Connecting Claude Code to Databricks AI Gateway
+## 4. Connecting Cursor to Databricks AI Gateway
 
 Databricks **AI Gateway** allows you to route AI model requests through your Databricks workspace, giving you centralized governance, observability, and cost management for all your AI coding tools.
 
-> **Why use AI Gateway?** Instead of each developer using their own Anthropic API key, AI Gateway routes all requests through Databricks — giving you unified billing, usage monitoring, and governance across all coding tools.
+> **Why use AI Gateway?** Instead of each developer using their own API key, AI Gateway routes all requests through Databricks — giving you unified billing, usage monitoring, and governance across all coding tools.
 
 ### Step 1: Open AI Gateway in Your Workspace
 
@@ -168,35 +164,42 @@ Databricks **AI Gateway** allows you to route AI model requests through your Dat
 2. In the left sidebar, click on **AI Gateway**
 3. Click **Coding agents** tab, then click **Other Integrations**
 
-![AI Gateway — Coding agents overview](images/4_claude_code_setup_step-1.png)
+### Step 2: Select Cursor and Configure Models
 
-### Step 2: Select Claude Code and Configure Models
-
-1. Select **Claude Code** as your coding integration
-2. Choose your default Anthropic model and optional Opus/Sonnet/Haiku models
+1. Select **Cursor** as your coding integration
+2. Choose your preferred models for each role (primary, secondary, etc.)
 3. Review the settings and proceed to the next step
-
-![Select Claude Code and configure models](images/4_claude_code_setup_step-2.png)
 
 ### Step 3: Copy the Configuration
 
-Databricks will show you the `settings.json` configuration and a **Generate API Key** button. Click it to generate your API key, then copy the full configuration block.
+Databricks will show you the configuration details and a **Generate API Key** button. Click it to generate your API key, then copy the configuration.
 
-![Copy settings.json configuration and generate API key](images/4_claude_code_setup_step-3.png)
+### Step 4: Configure Cursor
 
-### Step 4: Configure Claude Code
+Open Cursor and go to **Settings → Models**:
 
-Update your Claude Code settings file at `~/.claude/settings.json` with the configuration from the previous step:
+1. Click **Add Model** or edit an existing model configuration
+2. Set the **API Base URL** to your AI Gateway endpoint:
+   ```
+   https://<your-ai-gateway-url>/openai/v1
+   ```
+3. Set the **API Key** to the key generated in Step 3
+4. Select the model name shown in the AI Gateway configuration
+
+Alternatively, you can configure this in your Cursor settings JSON:
 
 ```json
 {
-    "env": {
-        "ANTHROPIC_MODEL": "databricks-claude-opus-4-6",
-        "ANTHROPIC_BASE_URL": "https://<your-ai-gateway-url>/anthropic",
-        "ANTHROPIC_AUTH_TOKEN": "<your_token_will_appear_here>",
-        "ANTHROPIC_CUSTOM_HEADERS": "x-databricks-use-coding-agent-mode: true",
-        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
-    }
+  "models": {
+    "providers": [
+      {
+        "name": "Databricks AI Gateway",
+        "baseUrl": "https://<your-ai-gateway-url>/openai/v1",
+        "apiKey": "<your_token_will_appear_here>",
+        "models": ["databricks-claude-sonnet-4-6"]
+      }
+    ]
+  }
 }
 ```
 
@@ -206,9 +209,9 @@ Replace:
 
 ### Step 5: Verify the Connection
 
-Restart Claude Code and try a simple prompt:
+Open the Composer panel and try a simple prompt:
 ```
-> Hello, can you confirm you're connected?
+Hello, can you confirm you're connected?
 ```
 
 If you get a response, you're all set! You can also check the **AI Gateway dashboard** in your workspace to see the request appear in the usage metrics.
@@ -244,7 +247,7 @@ Both tutorials follow the same structure:
 
 ---
 
-> **Workshop guide for Claude Code** — by Anthropic
+> **Workshop guide for Cursor** — by Anysphere
 >
-> For other coding agents, see [Codex CLI](README_CODEX.md) or [Cursor](README_CURSOR.md).
+> For other coding agents, see [Claude Code](README.md) or [Codex CLI](README_CODEX.md).
 > For questions or feedback, reach out to your workshop facilitator.
