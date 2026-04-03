@@ -8,15 +8,24 @@ This tutorial walks you through building a complete FSI data pipeline using your
 
 ---
 
-## Exercise 1: Create a Schema
+## Exercise 1: Set Up Your Catalog and Schema
 
-First, let's find out your catalog name. In your coding assistant, type:
+First, let's find out what catalogs are available. In your coding assistant, type:
 
 ```
 List the catalogs available in my Databricks workspace using the Databricks CLI with the WORKSHOP profile
 ```
 
 Note down your catalog name from the output.
+
+> **Using a shared workspace?** If you're running this tutorial on a shared workspace (not your own personal Databricks Free Edition workspace), you may want to create your own catalog to avoid conflicts with other participants. Use the following prompt:
+>
+> ```
+> Using the Databricks CLI with the WORKSHOP profile, create a catalog called
+> <your_username>_catalog in my Databricks workspace
+> ```
+>
+> Then use `<your_username>_catalog` as your `<your_catalog>` for the rest of this tutorial.
 
 Now, create a schema for the workshop:
 
@@ -28,7 +37,7 @@ Using the Databricks CLI with the WORKSHOP profile, create a schema called
 **Validate in the workspace:**
 1. Go to your Databricks workspace
 2. Navigate to **Catalog** in the left sidebar
-3. Expand your catalog
+3. Expand your catalog (or `<your_username>_catalog` if you created one)
 4. Confirm the `<your_username>_demo` schema exists
 
 ---
@@ -248,7 +257,7 @@ Congratulations! You've completed the FSI tutorial! Here's what you accomplished
 
 | Step | What You Built |
 |------|---------------|
-| Exercise 1 | A Unity Catalog schema for your demo |
+| Exercise 1 | A Unity Catalog catalog (optional) and schema for your demo |
 | Exercise 2 | A managed volume for landing raw data |
 | Exercise 3 | Uploaded FSI sample data to the volume |
 | Exercise 4 | A Spark Declarative Pipeline with bronze ingestion |
