@@ -22,21 +22,30 @@ Write-Step 1 "Choose your coding agent"
 Write-Host ""
 Write-Host "  Which coding agent would you like to use?"
 Write-Host ""
-Write-Host "    1) Claude Code  - recommended for Databricks Express / Enterprise Edition"
-Write-Host "    2) Codex CLI    - recommended for Databricks Free Edition"
+Write-Host "    1) Claude Code  - by Anthropic (terminal-based)"
+Write-Host "    2) Codex CLI    - by OpenAI (terminal-based)"
+Write-Host "    3) Cursor       - by Anysphere (IDE-based)"
 Write-Host ""
-$agentChoice = Read-Host "  Enter your choice (1 or 2)"
+$agentChoice = Read-Host "  Enter your choice (1, 2, or 3)"
 
 if ($agentChoice -eq "2") {
     $AgentName = "Codex CLI"
     $AgentCmd = "codex"
     $AgentInstallNpm = "@openai/codex"
     $AgentConfigDir = ".codex"
+    $AgentIsIde = $false
+} elseif ($agentChoice -eq "3") {
+    $AgentName = "Cursor"
+    $AgentCmd = "cursor"
+    $AgentInstallNpm = ""
+    $AgentConfigDir = ".cursor"
+    $AgentIsIde = $true
 } else {
     $AgentName = "Claude Code"
     $AgentCmd = "claude"
     $AgentInstallNpm = "@anthropic-ai/claude-code"
     $AgentConfigDir = ".claude"
+    $AgentIsIde = $false
 }
 
 Write-Ok "Selected: $AgentName"
@@ -44,26 +53,44 @@ Write-Ok "Selected: $AgentName"
 # --- Step 2: Install Coding Agent --------------------------------
 Write-Step 2 "Installing $AgentName"
 
-$agentExists = Get-Command $AgentCmd -ErrorAction SilentlyContinue
-if ($agentExists) {
-    $ver = & $AgentCmd --version 2>$null
-    Write-Ok "$AgentName already installed ($ver)"
-} else {
-    $npmExists = Get-Command npm -ErrorAction SilentlyContinue
-    if ($npmExists) {
-        Write-Host "  Installing via npm..."
-        & npm install -g $AgentInstallNpm
-    } else {
-        Write-Err "npm not found. Please install Node.js 18+ from https://nodejs.org/ and re-run."
-        exit 1
-    }
-
+if ($AgentIsIde) {
     $agentExists = Get-Command $AgentCmd -ErrorAction SilentlyContinue
     if ($agentExists) {
-        Write-Ok "$AgentName installed successfully"
+        Write-Ok "$AgentName already installed"
     } else {
-        Write-Err "$AgentName installation failed. Please install manually and re-run."
-        exit 1
+        Write-Warn "$AgentName is an IDE application - it cannot be installed from the terminal."
+        Write-Host "  Please download and install $AgentName from https://www.cursor.com/ and re-run this script."
+        Write-Host ""
+        $cursorInstalled = Read-Host "  Have you already installed $AgentName? (y/N)"
+        if ($cursorInstalled -eq "y" -or $cursorInstalled -eq "Y") {
+            Write-Ok "$AgentName confirmed installed by user"
+        } else {
+            Write-Err "Please install $AgentName first, then re-run this script."
+            exit 1
+        }
+    }
+} else {
+    $agentExists = Get-Command $AgentCmd -ErrorAction SilentlyContinue
+    if ($agentExists) {
+        $ver = & $AgentCmd --version 2>$null
+        Write-Ok "$AgentName already installed ($ver)"
+    } else {
+        $npmExists = Get-Command npm -ErrorAction SilentlyContinue
+        if ($npmExists -and $AgentInstallNpm) {
+            Write-Host "  Installing via npm..."
+            & npm install -g $AgentInstallNpm
+        } else {
+            Write-Err "npm not found. Please install Node.js 18+ from https://nodejs.org/ and re-run."
+            exit 1
+        }
+
+        $agentExists = Get-Command $AgentCmd -ErrorAction SilentlyContinue
+        if ($agentExists) {
+            Write-Ok "$AgentName installed successfully"
+        } else {
+            Write-Err "$AgentName installation failed. Please install manually and re-run."
+            exit 1
+        }
     }
 }
 
