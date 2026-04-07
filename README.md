@@ -58,7 +58,7 @@ The script will prompt you to choose between **Claude Code**, **Codex CLI**, and
 1. Lets you choose your **coding agent** (Claude Code or Codex CLI)
 2. Installs the selected coding agent (via Homebrew or npm)
 3. Installs **Databricks CLI** (via Homebrew, winget, or curl)
-4. Configures a Databricks CLI profile called `WORKSHOP` (prompts for workspace URL and token)
+4. Configures a Databricks CLI profile called `WORKSHOP` (prompts for workspace URL and authenticates via browser)
 5. Clones this repository
 6. Installs the **Databricks AI Dev Kit** (MCP server + skills for your coding agent)
 7. Verifies everything is working
@@ -74,7 +74,7 @@ If you'd rather set things up step by step:
    - Claude Code: `npm install -g @anthropic-ai/claude-code`
    - Codex CLI: `npm install -g @openai/codex`
 2. Install Databricks CLI: `brew install databricks` (macOS) / `winget install Databricks.DatabricksCLI` (Windows)
-3. Configure profile: `databricks configure --profile WORKSHOP`
+3. Configure profile: `databricks auth login --profile WORKSHOP`
 4. Clone repo: `git clone https://github.com/muharandy-db/dbxf_vibe_de.git && cd dbxf_vibe_de`
 5. Install AI Dev Kit: `bash <(curl -sL https://raw.githubusercontent.com/databricks-solutions/ai-dev-kit/main/install.sh)`
 

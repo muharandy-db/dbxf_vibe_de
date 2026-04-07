@@ -57,7 +57,7 @@ The script will walk you through each step interactively. Once complete, you'll 
 
 1. Installs **Codex CLI** (via npm)
 2. Installs **Databricks CLI** (via Homebrew, winget, or curl)
-3. Configures a Databricks CLI profile called `WORKSHOP` (prompts for workspace URL and token)
+3. Configures a Databricks CLI profile called `WORKSHOP` (prompts for workspace URL and authenticates via browser)
 4. Clones this repository
 5. Installs the **Databricks AI Dev Kit** (MCP server + skills for your coding agent)
 6. Verifies everything is working
@@ -71,7 +71,7 @@ If you'd rather set things up step by step:
 
 1. Install Codex CLI: `npm install -g @openai/codex`
 2. Install Databricks CLI: `brew install databricks` (macOS) / `winget install Databricks.DatabricksCLI` (Windows)
-3. Configure profile: `databricks configure --profile WORKSHOP`
+3. Configure profile: `databricks auth login --profile WORKSHOP`
 4. Clone repo: `git clone https://github.com/muharandy-db/dbxf_vibe_de.git && cd dbxf_vibe_de`
 5. Install AI Dev Kit: `bash <(curl -sL https://raw.githubusercontent.com/databricks-solutions/ai-dev-kit/main/install.sh)`
 
