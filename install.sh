@@ -143,20 +143,24 @@ if databricks auth env --profile "$PROFILE" &>/dev/null; then
     echo ""
     read -p "  Reconfigure? (y/N): " reconfigure
     if [[ "$reconfigure" =~ ^[Yy]$ ]]; then
-        databricks configure --profile "$PROFILE"
+        read -p "  Enter your Databricks workspace URL (e.g. https://adb-123.4.azuredatabricks.net): " ws_host
+        echo "  Opening browser for authentication..."
+        databricks auth login --host "$ws_host" --profile "$PROFILE"
     fi
 else
     echo "  Let's configure the '$PROFILE' profile to connect to your Databricks workspace."
     echo ""
-    databricks configure --profile "$PROFILE"
+    read -p "  Enter your Databricks workspace URL (e.g. https://adb-123.4.azuredatabricks.net): " ws_host
+    echo "  Opening browser for authentication..."
+    databricks auth login --host "$ws_host" --profile "$PROFILE"
 fi
 
 echo "  Verifying connection..."
 if databricks workspace list / --profile "$PROFILE" &>/dev/null; then
     print_ok "Successfully connected to workspace"
 else
-    print_err "Could not connect to workspace. Please check your host URL and token."
-    echo "  Run 'databricks configure --profile $PROFILE' to reconfigure."
+    print_err "Could not connect to workspace. Please check your workspace URL and try again."
+    echo "  Run 'databricks auth login --profile $PROFILE' to reconfigure."
     exit 1
 fi
 

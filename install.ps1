@@ -136,12 +136,16 @@ if ($profileOk) {
     Write-Ok "Profile '$Profile' already configured"
     $reconfigure = Read-Host "  Reconfigure? (y/N)"
     if ($reconfigure -eq "y" -or $reconfigure -eq "Y") {
-        & databricks configure --profile $Profile
+        $wsHost = Read-Host "  Enter your Databricks workspace URL (e.g. https://adb-123.4.azuredatabricks.net)"
+        Write-Host "  Opening browser for authentication..."
+        & databricks auth login --host $wsHost --profile $Profile
     }
 } else {
     Write-Host "  Let's configure the '$Profile' profile to connect to your Databricks workspace."
     Write-Host ""
-    & databricks configure --profile $Profile
+    $wsHost = Read-Host "  Enter your Databricks workspace URL (e.g. https://adb-123.4.azuredatabricks.net)"
+    Write-Host "  Opening browser for authentication..."
+    & databricks auth login --host $wsHost --profile $Profile
 }
 
 Write-Host "  Verifying connection..."
@@ -149,8 +153,8 @@ try {
     & databricks workspace list / --profile $Profile 2>$null | Out-Null
     Write-Ok "Successfully connected to workspace"
 } catch {
-    Write-Err "Could not connect to workspace. Please check your host URL and token."
-    Write-Host "  Run 'databricks configure --profile $Profile' to reconfigure."
+    Write-Err "Could not connect to workspace. Please check your workspace URL and try again."
+    Write-Host "  Run 'databricks auth login --profile $Profile' to reconfigure."
     exit 1
 }
 
